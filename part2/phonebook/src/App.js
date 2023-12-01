@@ -61,7 +61,7 @@ const App = () => {
       })
       .catch(error => {
         console.error('Error while creating:', error.message)
-        showNotification({message:`An error ocurred trying to add ${newPerson.name}`, type:'error'})
+        showNotification({message:error.response.data.error, type:'error'})
       })
     }
   }
