@@ -1,4 +1,4 @@
-const http = require('http')
+// const http = require('http')
 const express = require('express')
 const app = express()
 const cors = require('cors')
@@ -8,8 +8,7 @@ const config = require('./utils/config')
 const blogsRouter = require('./controllers/blogs')
 const middleware = require('./utils/middleware')
 
-
-//const Blog = mongoose.model('Blog', blogSchema)
+// const Blog = mongoose.model('Blog', blogSchema)
 
 logger.info('connecting to', config.MONGODB_URI)
 
