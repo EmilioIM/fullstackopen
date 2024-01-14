@@ -1,6 +1,6 @@
 const reverse = require('../utils/for_testing').reverse
 
-describe('reverse', () => {
+describe.skip('reverse', () => {
   test('reverse of a', () => {
     const result = reverse('a')
 

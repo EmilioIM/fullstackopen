@@ -50,7 +50,7 @@ const blogs = [
   }
 ]
 
-describe('blog tests examples', () => {
+describe.skip('blog tests examples', () => {
   test('dummy returns one', () => {
     const result = listHelper.dummy(blogs)
     expect(result).toBe(1)

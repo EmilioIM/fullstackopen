@@ -12,9 +12,19 @@
         ],
         "console": "integratedTerminal",
         "internalConsoleOptions": "neverOpen",
-        "windows": {
-          "runtimeExecutable": "${workspaceFolder}/node_modules/jest/bin/jest.js"
-        }
+      },
+      {
+        "type": "node",
+        "request": "launch",
+        "name": "Jest blog_api.test.js",
+        "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/jest",
+        "args": [
+          "--runInBand", // Importante para depurar correctamente
+          "--no-cache",
+          "-- tests/blog_api.test.js"
+        ],
+        "console": "integratedTerminal",
+        "internalConsoleOptions": "neverOpen",
       }
     ]
   }
