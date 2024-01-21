@@ -72,6 +72,7 @@ describe('addition of a new blog', () => {
       author: 'Emilio Iglesias',
       url: 'emilio.dev/blog/new',
       likes: '0'
+      // userId: '65acf2daf8f89da2fe28a760'
     }
 
     await api

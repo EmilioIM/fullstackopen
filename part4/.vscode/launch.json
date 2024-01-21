@@ -21,7 +21,7 @@
         "args": [
           "--runInBand", // Importante para depurar correctamente
           "--no-cache",
-          "-- tests/blog_api.test.js"
+          "tests/blog_api.test.js"
         ],
         "console": "integratedTerminal",
         "internalConsoleOptions": "neverOpen",

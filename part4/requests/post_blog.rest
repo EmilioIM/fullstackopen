@@ -1,0 +1,10 @@
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+
+{
+  "title": "Mi segundo blog",
+  "author": "Emilio Iglesias",
+  "url": "https://emilio.dev/blogs",
+  "likes": "0",
+  "userId": "65ad036975295bda0e1019a1"
+}
