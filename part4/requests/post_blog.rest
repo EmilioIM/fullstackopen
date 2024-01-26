@@ -1,10 +1,10 @@
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkVtaWxpYW5vamUiLCJpZCI6IjY1YWQwMzY5NzUyOTViZGEwZTEwMTlhMSIsImlhdCI6MTcwNjI5MzY2N30.-SkGOmv0ZGbI3Ug3YA7HIT0j3Nc2DjG-K8aXRFkG_VA
 
 {
-  "title": "Mi segundo blog",
+  "title": "Mi blog 5",
   "author": "Emilio Iglesias",
   "url": "https://emilio.dev/blogs",
-  "likes": "0",
-  "userId": "65ad036975295bda0e1019a1"
+  "likes": "0"
 }

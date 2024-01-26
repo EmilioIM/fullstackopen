@@ -4,6 +4,15 @@
       {
         "type": "node",
         "request": "launch",
+        "name": "Ejecutar",
+        "skipFiles": [
+          "<node_internals>/**"
+        ],
+        "program": "${workspaceFolder}/index.js"
+      },
+      {
+        "type": "node",
+        "request": "launch",
         "name": "Jest All",
         "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/jest",
         "args": [
