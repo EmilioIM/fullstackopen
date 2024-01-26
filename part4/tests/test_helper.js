@@ -6,13 +6,22 @@ const initialBlogs = [
     title: 'Mi primer blog: Hola Mundo!',
     author: 'Emilio Iglesias',
     url: 'emilio.dev/blog/1',
-    likes: '7'
+    likes: '7',
+    userId: '65ad036975295bda0e1019a1'
   },
   {
     title: 'Mi segundo blog',
     author: 'Emilio Iglesias',
     url: 'emilio.dev/blog/2',
-    likes: '3'
+    likes: '3',
+    userId: '65ad036975295bda0e1019a1'
+  },
+  {
+    title: 'Mi primer pedroblog',
+    author: 'Pedro Gutierrez',
+    url: 'pedro.dev/blog/1',
+    likes: '2',
+    userId: '65ad036975295bda0e1019a2'
   }
 ]
 
