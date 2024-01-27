@@ -1,4 +1,4 @@
-@blogId = 65b400fe47e3fddd52c743e7
+@blogId = 65b4c8cada4f9539ad4fea35
 @token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkVtaWxpYW5vamUiLCJpZCI6IjY1YWQwMzY5NzUyOTViZGEwZTEwMTlhMSIsImlhdCI6MTcwNjI5MzY2N30.-SkGOmv0ZGbI3Ug3YA7HIT0j3Nc2DjG-K8aXRFkG_VA
 
 DELETE http://localhost:3003/api/blogs/{{blogId}}
