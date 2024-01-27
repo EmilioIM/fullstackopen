@@ -1,1 +1,5 @@
-DELETE http://localhost:3003/api/blogs/65b3fb0ddd4a889883c0740c
+@blogId = 65b400fe47e3fddd52c743e7
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkVtaWxpYW5vamUiLCJpZCI6IjY1YWQwMzY5NzUyOTViZGEwZTEwMTlhMSIsImlhdCI6MTcwNjI5MzY2N30.-SkGOmv0ZGbI3Ug3YA7HIT0j3Nc2DjG-K8aXRFkG_VA
+
+DELETE http://localhost:3003/api/blogs/{{blogId}}
+Authorization: bearer {{token}}
