@@ -3,8 +3,14 @@ const supertest = require('supertest')
 const helper = require('./test_helper')
 const app = require('../app')
 const api = supertest(app)
-
 const Blog = require('../models/blog')
+
+const loginUser = async () => {
+  const response = await api
+    .post('/api/login')
+    .send({ username: 'root', password: 'sekret' })
+  return response.body.token
+}
 
 beforeEach(async () => {
   await Blog.deleteMany({})
@@ -58,7 +64,7 @@ describe('viewing a specific blog', () => {
     )
   })
 
-  test.skip('the first blog is about Hola Mundo', async () => {
+  test('the first blog is about Hola Mundo', async () => {
     const response = await helper.blogsInDb()
 
     expect(response[0].title).toBe('Mi primer blog: Hola Mundo!')
@@ -75,8 +81,11 @@ describe('addition of a new blog', () => {
       // userId: '65acf2daf8f89da2fe28a760'
     }
 
+    const token = await loginUser()
+
     await api
       .post('/api/blogs')
+      .set('Authorization', `Bearer ${token}`)
       .send(newBlog)
       .expect(201)
       .expect('Content-Type', /application\/json/)
@@ -126,8 +135,11 @@ describe('addition of a new blog', () => {
       url: 'emilio.dev/blog/new'
     }
 
+    const token = await loginUser()
+
     await api
       .post('/api/blogs')
+      .set('Authorization', `Bearer ${token}`)
       .send(newBlog)
       .expect(201)
       .expect('Content-Type', /application\/json/)
@@ -169,8 +181,11 @@ describe('deletion of a blog', () => {
     const blogsAtStart = await helper.blogsInDb()
     const blogToDelete = blogsAtStart[0]
 
+    const token = await loginUser()
+
     await api
       .delete(`/api/blogs/${blogToDelete.id}`)
+      .set('Authorization', `Bearer ${token}`)
       .expect(204)
 
     const blogsAtEnd = await helper.blogsInDb()
