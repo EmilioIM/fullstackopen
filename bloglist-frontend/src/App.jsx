@@ -100,16 +100,16 @@ const App = () => {
         </Togglable>
       ) : (
         <div>
-          <p>{`${user.name} logged in`}</p>
+          <span>{`${user.name} logged in `}</span>
           <button onClick={handleLogout}>logout</button>
 
           <h3>Blogs</h3>
+          <Togglable buttonLabel="new note" ref={blogFormRef}>
+            <BlogForm createBlog={handleAddBlog} />
+          </Togglable>
           {blogs.map(blog =>
             <Blog key={blog.id} blog={blog} />
           )}
-          <Togglable buttonLabel="new note" ref={blogFormRef}>
-            <BlogForm createBlog={handleAddBlog} />
-          </Togglable> 
         </div>
       )}
     </>
