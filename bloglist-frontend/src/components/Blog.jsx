@@ -1,12 +1,28 @@
 import Togglable from "./Togglable"
+import blogService from "../services/blogs"
 
-const Blog = ({ blog }) => {
+const Blog = ({ blog, updateBlog, deleteBlog }) => {
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
     border: 'solid',
     borderWidth: 1,
     marginBottom: 5,
+  }
+
+  const handleLike = () => {
+    const updatedBlog = {
+      ...blog,
+      likes: blog.likes + 1
+    };
+    blogService.update(blog.id, updatedBlog);
+    updateBlog(updatedBlog)
+  }
+
+  const handleRemove = () => {
+    if (window.confirm(`Delete blog ${blog.title} by ${blog.author}?`)) {
+      deleteBlog(blog.id);
+    }
   }
 
   return (
@@ -16,10 +32,11 @@ const Blog = ({ blog }) => {
         {blog.url}
         <br/>
         {blog.likes}
-        <button>like</button>
+        <button onClick={handleLike}>like</button>
         <br/>
         {blog.author}
         <br/>
+        <button onClick={handleRemove}>remove</button>
       </Togglable>
     </div>
   )
