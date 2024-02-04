@@ -1,5 +1,5 @@
-import Togglable from "./Togglable"
-import blogService from "../services/blogs"
+import Togglable from './Togglable'
+import blogService from '../services/blogs'
 
 const Blog = ({ blog, updateBlog, deleteBlog }) => {
   const blogStyle = {
@@ -14,21 +14,21 @@ const Blog = ({ blog, updateBlog, deleteBlog }) => {
     const updatedBlog = {
       ...blog,
       likes: blog.likes + 1
-    };
-    blogService.update(blog.id, updatedBlog);
+    }
+    blogService.update(blog.id, updatedBlog)
     updateBlog(updatedBlog)
   }
 
   const handleRemove = () => {
     if (window.confirm(`Delete blog ${blog.title} by ${blog.author}?`)) {
-      deleteBlog(blog.id);
+      deleteBlog(blog.id)
     }
   }
 
   return (
     <div style={blogStyle}>
       {blog.title}
-      <Togglable buttonLabel={"view"}>
+      <Togglable buttonLabel={'view'}>
         {blog.url}
         <br/>
         {blog.likes}
@@ -37,6 +37,7 @@ const Blog = ({ blog, updateBlog, deleteBlog }) => {
         {blog.author}
         <br/>
         <button onClick={handleRemove}>remove</button>
+        <br/>
       </Togglable>
     </div>
   )

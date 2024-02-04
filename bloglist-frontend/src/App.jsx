@@ -63,54 +63,54 @@ const App = () => {
   }
 
   const handleAddBlog = async (blog) => {
-    blog.author = user.name;
-    console.log('Adding new blog', blog);
+    blog.author = user.name
+    console.log('Adding new blog', blog)
     // Lógica para añadir un nuevo blog
     try {
       blogFormRef.current.toggleVisibility()
-      const createdBlog = await blogService.create(blog);
-      setBlogs(blogs.concat(createdBlog));
-      setMessage(`Nuevo blog '${createdBlog.title}' de ${createdBlog.author} añadido con éxito`);
+      const createdBlog = await blogService.create(blog)
+      setBlogs(blogs.concat(createdBlog))
+      setMessage(`Nuevo blog '${createdBlog.title}' de ${createdBlog.author} añadido con éxito`)
       setTimeout(() => {
-        setMessage(null);
-      }, 5000);
+        setMessage(null)
+      }, 5000)
     } catch (exception) {
-      setErrorMessage(`Error al añadir blog: ${exception.message}`);
+      setErrorMessage(`Error al añadir blog: ${exception.message}`)
       setTimeout(() => {
-        setErrorMessage(null);
-      }, 5000);
+        setErrorMessage(null)
+      }, 5000)
     }
-  };
+  }
 
   const updateBlog = (updatedBlog) => {
     setBlogs(blogs
       .map(blog =>
         blog.id === updatedBlog.id ? updatedBlog : blog)
-    );
+    )
   }
 
   const deleteBlog = (id) => {
     try {
       blogService.remove(id)
       setBlogs(blogs.filter(blog => blog.id !== id))
-      setMessage(`Blog eliminado con éxito`);
+      setMessage('Blog eliminado con éxito')
       setTimeout(() => {
-        setMessage(null);
-      }, 5000);
+        setMessage(null)
+      }, 5000)
     } catch (error) {
-      setErrorMessage(`Error al eliminar el blog: ${exception.message}`);
+      setErrorMessage(`Error al eliminar el blog: ${error.message}`)
       setTimeout(() => {
-        setErrorMessage(null);
-      }, 5000);
+        setErrorMessage(null)
+      }, 5000)
     }
-  };
+  }
 
   return (
     <>
-      <Notification message={errorMessage} type={"error"} />
-      <Notification message={message} type={"success"} />
+      <Notification message={errorMessage} type={'error'} />
+      <Notification message={message} type={'success'} />
 
-      {user == null ? (
+      {user === null ? (
         <Togglable buttonLabel="login">
           <LoginForm
             username={username}

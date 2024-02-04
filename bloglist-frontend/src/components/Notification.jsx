@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 
-const Notification = ({message, type}) => {
+const Notification = ({ message, type }) => {
   // console.log('lo que llega a notification',{message, type});
   const [isVisible, setIsVisible] = useState(false)
 
@@ -11,7 +11,7 @@ const Notification = ({message, type}) => {
     },3000)
   },[message])
 
-  return isVisible && message != null ? (
+  return isVisible && message !== null ? (
     <div className={`${type}`}>
       {message}
     </div>
