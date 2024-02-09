@@ -26,7 +26,7 @@ const Blog = ({ blog, updateBlog, deleteBlog }) => {
   }
 
   return (
-    <div style={blogStyle}>
+    <ul style={blogStyle} className='blog'>
       {blog.title}
       <Togglable buttonLabel={'view'}>
         {blog.url}
@@ -39,7 +39,7 @@ const Blog = ({ blog, updateBlog, deleteBlog }) => {
         <button onClick={handleRemove}>remove</button>
         <br/>
       </Togglable>
-    </div>
+    </ul>
   )
 }
 

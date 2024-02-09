@@ -18,10 +18,18 @@ const BlogForm = ({
   return (
     <form onSubmit={addBlog}>
       <div>
-                Title: <input name="title" value={newBlog.title} onChange={handleBlogChange} />
+                Title: <input
+          name="title"
+          value={newBlog.title}
+          onChange={handleBlogChange}
+          placeholder="Título"/>
       </div>
       <div>
-                URL: <input name="url" value={newBlog.url} onChange={handleBlogChange} />
+                URL: <input
+          name="url"
+          value={newBlog.url}
+          onChange={handleBlogChange}
+          placeholder="URL"/>
       </div>
       <button type="submit">save</button>
     </form>
