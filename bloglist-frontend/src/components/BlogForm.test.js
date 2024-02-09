@@ -4,20 +4,25 @@ import '@testing-library/jest-dom'
 import BlogForm from './BlogForm'
 import userEvent from '@testing-library/user-event'
 
-test('<BlogForm /> updates parent state and calls onSubmit', async () => {
-  const createBlog = jest.fn()
-  const user = userEvent.setup()
+describe('BlogForm', () => {
+  test('calls the event handler it received as props with the right details when a new blog is created', async () => {
+    const createBlogMock = jest.fn()
+    render(<BlogForm createBlog={createBlogMock} />)
 
-  render(<BlogForm createBlog={createBlog} />)
+    const user = userEvent.setup()
 
-  const input = screen.getByPlaceholderText('Título')
-  // const input2 = screen.getByPlaceholderText('URL')
-  const sendButton = screen.getByText('save', { exact: false })
+    const inputTitle = screen.getByPlaceholderText('Título')
+    const inputUrl = screen.getByPlaceholderText('URL')
+    const saveButton = screen.getByText('save')
 
-  await user.type(input, 'testing a form...')
-  // await user.type(input2, 'testing a form...')
-  await user.click(sendButton)
+    await user.type(inputTitle, 'Testing with Jest')
+    await user.type(inputUrl, 'https://jestjs.io')
+    await user.click(saveButton)
 
-  expect(createBlog.mock.calls).toHaveLength(1)
-  expect(createBlog.mock.calls[0][0].content).toBe('testing a form...')
+    expect(createBlogMock).toHaveBeenCalledWith({
+      title: 'Testing with Jest',
+      author: '', // Dado que no hemos llenado este campo, se espera que sea una cadena vacía
+      url: 'https://jestjs.io',
+    })
+  })
 })
