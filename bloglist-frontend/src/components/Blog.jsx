@@ -1,7 +1,7 @@
 import Togglable from './Togglable'
 import blogService from '../services/blogs'
 
-const Blog = ({ blog, updateBlog, deleteBlog }) => {
+const Blog = ({ blog, updateBlog, deleteBlog, onClickView }) => {
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -29,12 +29,12 @@ const Blog = ({ blog, updateBlog, deleteBlog }) => {
     <ul style={blogStyle} className='blog'>
       {blog.title}
       <Togglable buttonLabel={'view'}>
-        {blog.url}
-        <br/>
-        {blog.likes}
-        <button onClick={handleLike}>like</button>
-        <br/>
-        {blog.author}
+        <div data-testid="blog-url">{blog.url}</div>
+        <div data-testid="blog-likes">
+          {blog.likes}
+          <button onClick={handleLike}>like</button>
+        </div>
+        <div data-testid="blog-author">{blog.author}</div>
         <br/>
         <button onClick={handleRemove}>remove</button>
         <br/>
