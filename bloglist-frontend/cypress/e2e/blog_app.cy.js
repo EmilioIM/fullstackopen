@@ -42,9 +42,9 @@ describe('Blog app', function() {
         password: '1234',
       }
       cy.login(user)
-      cy.createBlog({ title:'blog 1', url:'www.url1.com', author:user.name })
-      cy.createBlog({ title:'blog 2', url:'www.url2.com', author:user.name })
-      cy.createBlog({ title:'blog 3', url:'www.url3.com', author:user.name })
+      cy.createBlog({ title:'blog 1', url:'www.url1.com', author:user.name, likes:1 })
+      cy.createBlog({ title:'blog 2', url:'www.url2.com', author:user.name, likes:2 })
+      cy.createBlog({ title:'blog 3', url:'www.url3.com', author:user.name, likes:3 })
     })
 
     it('a new blog can be created', function() {
@@ -91,6 +91,24 @@ describe('Blog app', function() {
         .contains('remove')
         .click()
 
+    })
+
+    it('blogs are ordered by likes', function(){
+      cy.get('.blog').each(($blog) => {
+        cy.wrap($blog).find('button').contains('view').click()
+      })
+
+      let likes = []
+
+      cy.get('.blog').each(($blog) => {
+        cy.wrap($blog).find('[data-testid="blog-likes"]').invoke('text').then((text) => {
+          const likesNumber = parseInt(text.split(' ')[0])
+          likes.push(likesNumber)
+        })
+      }).then(() => {
+        let sortedLikes = [...likes].sort((a, b) => b - a)
+        expect(likes).to.deep.equal(sortedLikes)
+      })
     })
   })
 
