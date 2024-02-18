@@ -1,7 +1,7 @@
 import Togglable from './Togglable'
 import blogService from '../services/blogs'
 
-const Blog = ({ blog, updateBlog, deleteBlog }) => {
+const Blog = ({ blog, user, updateBlog, deleteBlog }) => {
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -25,6 +25,8 @@ const Blog = ({ blog, updateBlog, deleteBlog }) => {
     }
   }
 
+  console.log('User Name:', user.name, 'Blog:', blog)
+
   return (
     <ul style={blogStyle} className='blog'>
       {blog.title}
@@ -36,7 +38,7 @@ const Blog = ({ blog, updateBlog, deleteBlog }) => {
         </div>
         <div data-testid="blog-author">{blog.author}</div>
         <br/>
-        <button onClick={handleRemove}>remove</button>
+        {user && user.name === blog.author && <button onClick={handleRemove}>remove</button>}
         <br/>
       </Togglable>
     </ul>

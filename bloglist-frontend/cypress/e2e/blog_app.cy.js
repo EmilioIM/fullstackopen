@@ -1,12 +1,19 @@
 describe('Blog app', function() {
   beforeEach(function() {
     cy.request('POST', `${Cypress.env('BACKEND')}/testing/reset`)
-    const user = {
+    const user1 = {
       name: 'Emilio Iglesias',
       username: 'Emilianoje',
       password: '1234'
     }
-    cy.request('POST', `${Cypress.env('BACKEND')}/users/`, user)
+    cy.request('POST', `${Cypress.env('BACKEND')}/testing/reset`)
+    const user2 = {
+      name: 'Rosa Melano',
+      username: 'rosame',
+      password: '1234'
+    }
+    cy.request('POST', `${Cypress.env('BACKEND')}/users/`, user1)
+    cy.request('POST', `${Cypress.env('BACKEND')}/users/`, user2)
     cy.visit('')
   })
 
@@ -29,17 +36,22 @@ describe('Blog app', function() {
 
   describe('when logged in', function() {
     beforeEach(function() {
-      cy.login({ username: 'Emilianoje', password: '1234' })
-      cy.createBlog({ title:'blog 1', url:'www.url1.com' })
-      cy.createBlog({ title:'blog 2', url:'www.url2.com' })
-      cy.createBlog({ title:'blog 3', url:'www.url3.com' })
+      const user = {
+        name: 'Emilio Iglesias',
+        username: 'Emilianoje',
+        password: '1234',
+      }
+      cy.login(user)
+      cy.createBlog({ title:'blog 1', url:'www.url1.com', author:user.name })
+      cy.createBlog({ title:'blog 2', url:'www.url2.com', author:user.name })
+      cy.createBlog({ title:'blog 3', url:'www.url3.com', author:user.name })
     })
 
     it('a new blog can be created', function() {
       const blogData = {
         title: 'a blog created by cypress',
         url: 'www.cypresstesting.com',
-      }
+        author: 'Emilio Iglesias' }
       cy.createBlog(blogData)
       cy.contains(blogData.title)
     })
@@ -48,6 +60,7 @@ describe('Blog app', function() {
       const blogData = {
         title: 'a blog created by cypress',
         url: 'www.cypresstesting.com',
+        author: 'Emilio Iglesias'
       }
       cy.createBlog(blogData)
 
@@ -60,6 +73,24 @@ describe('Blog app', function() {
         .click()
 
       cy.contains('1')
+    })
+
+    it('a blog can be deleted', function(){
+      const blogData = {
+        title: 'a blog created to be deleted',
+        url: 'www.cypresstesting.com',
+        author: 'Emilio Iglesias'
+      }
+      cy.createBlog(blogData)
+
+      cy.contains(blogData.title)
+        .contains('view')
+        .click()
+
+      cy.contains(blogData.title)
+        .contains('remove')
+        .click()
+
     })
   })
 
