@@ -1,7 +1,7 @@
 import Togglable from './Togglable'
 import blogService from '../services/blogs'
 
-const Blog = ({ blog, updateBlog, deleteBlog, onClickView }) => {
+const Blog = ({ blog, updateBlog, deleteBlog }) => {
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
