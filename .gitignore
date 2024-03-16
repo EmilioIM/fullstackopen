@@ -34,3 +34,5 @@ part4prueba/requests/put_person.rest
 part4prueba/utils/config.js
 part4prueba/utils/logger.js
 part4prueba/utils/middleware.js
+part6/
+unicafe-redux/
