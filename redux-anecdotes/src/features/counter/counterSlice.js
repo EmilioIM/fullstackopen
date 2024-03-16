@@ -25,15 +25,19 @@ export const counterSlice = createSlice({
     name: 'counter',
     initialState,
     reducers: {
-        increment: (state, action) => {
+        vote: (state, action) => {
             const anecdoteToIncrement = state.find(anecdote => anecdote.id === action.payload)
             if (anecdoteToIncrement) {
                 anecdoteToIncrement.votes += 1;
             }
+        },
+        create: (state, action) => {
+            const newAnecdote = asObject(action.payload)
+            state.push(newAnecdote)
         }
     },
 });
 
-export const { increment } = counterSlice.actions;
+export const { vote, create } = counterSlice.actions;
 
 export default counterSlice.reducer;
