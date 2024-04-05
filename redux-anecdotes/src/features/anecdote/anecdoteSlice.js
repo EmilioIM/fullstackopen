@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, current } from '@reduxjs/toolkit';
 
 const anecdotesAtStart = [
     'If it hurts, do it more often',
@@ -24,8 +24,8 @@ const initialState = {
     filter: ''
 }
 
-export const counterSlice = createSlice({
-    name: 'counter',
+export const anecdoteSlice = createSlice({
+    name: 'anecdotes',
     initialState,
     reducers: {
         create: (state, action) => {
@@ -37,6 +37,8 @@ export const counterSlice = createSlice({
             if (anecdoteToIncrement) {
                 anecdoteToIncrement.votes += 1;
             }
+
+            console.log(current(state))
         },
         setFilter: (state, action) => {
             state.filter = action.payload
@@ -44,6 +46,6 @@ export const counterSlice = createSlice({
     },
 });
 
-export const { vote, create, setFilter } = counterSlice.actions;
+export const { vote, create, setFilter } = anecdoteSlice.actions;
 
-export default counterSlice.reducer;
+export default anecdoteSlice.reducer;

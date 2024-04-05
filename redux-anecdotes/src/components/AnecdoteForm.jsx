@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { create } from '../features/counter/counterSlice';
+import { create } from '../features/anecdote/anecdoteSlice';
+import { showNotification, clearNotification } from '../features/anecdote/notificationSlice';
+
 
 const AnecdoteForm = () => {
   const [newAnecdote, setNewAnecdote] = useState('');
@@ -14,6 +16,8 @@ const AnecdoteForm = () => {
     e.preventDefault();
     dispatch(create(newAnecdote));
     setNewAnecdote('');
+    dispatch(showNotification('created "' + newAnecdote + '"'))
+    setTimeout(() => dispatch(clearNotification()), 5000);
   };
 
   return (
