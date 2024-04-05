@@ -13,31 +13,37 @@ const getId = () => (100000 * Math.random()).toFixed(0)
 
 const asObject = (anecdote) => {
     return {
-        content: anecdote,
+        content: String(anecdote),
         id: getId(),
         votes: 0
     }
 }
 
-const initialState = anecdotesAtStart.map(asObject)
+const initialState = {
+    anecdotes: anecdotesAtStart.map(asObject),
+    filter: ''
+}
 
 export const counterSlice = createSlice({
     name: 'counter',
     initialState,
     reducers: {
+        create: (state, action) => {
+            const newAnecdote = asObject(action.payload)
+            state.anecdotes.push(newAnecdote)
+        },
         vote: (state, action) => {
-            const anecdoteToIncrement = state.find(anecdote => anecdote.id === action.payload)
+            const anecdoteToIncrement = state.anecdotes.find(a => a.id === action.payload)
             if (anecdoteToIncrement) {
                 anecdoteToIncrement.votes += 1;
             }
         },
-        create: (state, action) => {
-            const newAnecdote = asObject(action.payload)
-            state.push(newAnecdote)
+        setFilter: (state, action) => {
+            state.filter = action.payload
         }
     },
 });
 
-export const { vote, create } = counterSlice.actions;
+export const { vote, create, setFilter } = counterSlice.actions;
 
 export default counterSlice.reducer;
