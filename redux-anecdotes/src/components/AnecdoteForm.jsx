@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { create } from '../features/anecdote/anecdoteSlice';
-import { showNotification, clearNotification } from '../features/anecdote/notificationSlice';
+import { showNotification } from '../features/anecdote/notificationSlice';
+import { createAnecdote } from '../features/anecdote/anecdoteSlice'
 
 
 const AnecdoteForm = () => {
@@ -12,12 +12,11 @@ const AnecdoteForm = () => {
     setNewAnecdote(e.target.value);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    dispatch(create(newAnecdote));
+    dispatch(createAnecdote(newAnecdote))
     setNewAnecdote('');
-    dispatch(showNotification('created "' + newAnecdote + '"'))
-    setTimeout(() => dispatch(clearNotification()), 5000);
+    dispatch(showNotification('created "' + newAnecdote + '"', 3))
   };
 
   return (

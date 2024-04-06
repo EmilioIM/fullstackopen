@@ -1,19 +1,18 @@
 import { useSelector, useDispatch } from 'react-redux'
-import { vote } from '../features/anecdote/anecdoteSlice';
-import { showNotification, clearNotification } from '../features/anecdote/notificationSlice';
+import { voteAnecdote } from '../features/anecdote/anecdoteSlice';
+import { showNotification } from '../features/anecdote/notificationSlice';
 
 
 const AnecdoteList = () => {
-  const { anecdotes, filter } = useSelector(state => state.anecdotes)
+  const anecdotes = useSelector(state => state.anecdotes)
+  const filter = useSelector(state => state.filters)
   const dispatch = useDispatch()
-  
   const filteredAnecdotes = anecdotes.filter(a => a.content.toLowerCase().includes(filter.toLowerCase()))
   const sortedAnecdotes = [...filteredAnecdotes].sort((a, b) => b.votes - a.votes); // Tambien podemos hacerlo en el useSelector
   
   const handleVote = (anecdote) => {
-    dispatch(vote(anecdote.id))
-    dispatch(showNotification('voted "' + anecdote.content + '"'))
-    setTimeout(() => dispatch(clearNotification()), 5000);
+    dispatch(voteAnecdote(anecdote.id))
+    dispatch(showNotification('voted "' + anecdote.content + '"', 3))
   }
   
   return (

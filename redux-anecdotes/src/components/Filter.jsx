@@ -1,5 +1,5 @@
 import { useDispatch } from 'react-redux';
-import { setFilter } from '../features/anecdote/anecdoteSlice';
+import { setFilter } from '../features/anecdote/filterSlice';
 
 const Filter = () => {
     const dispatch = useDispatch();
