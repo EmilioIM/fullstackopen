@@ -33,7 +33,12 @@
     {
       "id": "805",
       "content": "aaa",
-      "votes": 5
+      "votes": 9
+    },
+    {
+      "id": "15464",
+      "content": "bbb",
+      "votes": 0
     }
   ]
 }
