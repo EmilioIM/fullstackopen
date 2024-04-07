@@ -1,4 +1,4 @@
-import { createContext, useContext, useReducer } from 'react';
+import { createContext, useContext, useReducer, useEffect } from 'react';
 
 // Define initial state
 const initialState = {
@@ -21,11 +21,19 @@ const notificationReducer = (state, action) => {
   }
 };
 
-
-
 // Create a provider component
 export const NotificationProvider = (props) => {
   const [state, dispatch] = useReducer(notificationReducer, initialState);
+
+  useEffect(() => {
+    if (state.message && state.duration) {
+      const timer = setTimeout(() => {
+        dispatch({ type: 'HIDE' });
+      }, state.duration * 1000);
+
+      return () => clearTimeout(timer); // Limpieza al desmontar o cambiar el mensaje
+    }
+  }, [state.message, state.duration]);
 
   return (
     <NotificationContext.Provider value={{ state, dispatch }}>

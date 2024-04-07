@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { getAnecdotes, createAnecdote, updateAnecdote } from '../services/requests'
-import { useNotification } from './components/NotificationContext';
+import { useNotification } from './NotificationContext';
 
 const AnecdoteForm = () => {
   const getId = () => (100000 * Math.random()).toFixed(0)
@@ -13,6 +13,11 @@ const AnecdoteForm = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['anecdotes'] })
       dispatch({ type: 'SHOW', message: `created "${newAnecdoteMutation.content}"`, duration: 3 });
+    },
+    onError: (error) => {
+      // Aquí manejas el error
+      // Suponiendo que tu servidor responde con un JSON que incluye un campo de error
+      dispatch({ type: 'SHOW', message: error.response.data.error, duration: 3 });
     },
   })
 
