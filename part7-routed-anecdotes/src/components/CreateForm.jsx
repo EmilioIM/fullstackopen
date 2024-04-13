@@ -1,18 +1,19 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import  { useField } from '../hooks/index'
 import PropTypes from 'prop-types';
 
 const CreateForm = (props) => {
-  const [content, setContent] = useState('')
-  const [author, setAuthor] = useState('')
-  const [info, setInfo] = useState('')
+  const { reset: resetContent, ...content } = useField('text');
+  const { reset: resetAuthor, ...author } = useField('text');
+  const { reset: resetInfo, ...info } = useField('text');
   const [errors, setErrors] = useState({});
   const navigate = useNavigate()
 
   const validateFields = () => {
     const newErrors = {};
-    if (!content.trim()) newErrors.content = 'Content is required.';
-    if (!author.trim()) newErrors.author = 'Author is required.';
+    if (!content.value.trim()) newErrors.content = 'Content is required.';
+    if (!author.value.trim()) newErrors.author = 'Author is required.';
     return newErrors;
   };
 
@@ -25,15 +26,23 @@ const CreateForm = (props) => {
     }
 
     props.addNew({
-      content,
-      author,
-      info,
+      content: content.value,
+      author: author.value,
+      info: info.value,
       votes: 0
     })
 
-    props.setNotification(`a new anecdote ${content} created!`)
+    handleReset();
+
+    props.setNotification(`a new anecdote ${content.value} created!`)
 
     navigate('/anecdotes')
+  }
+
+  const handleReset = () => {
+    resetContent();
+    resetAuthor();
+    resetInfo();
   }
 
   return (
@@ -42,19 +51,20 @@ const CreateForm = (props) => {
       <form onSubmit={handleSubmit}>
         <div>
           <span>content</span>
-          <input name='content' value={content} onChange={(e) => setContent(e.target.value)} />
+          <input {...content} />
           {errors.content && <p className="error-message">{errors.content}</p>}
         </div>
         <div>
           <span>author</span>
-          <input name='author' value={author} onChange={(e) => setAuthor(e.target.value)} />
+          <input {...author} />
           {errors.author && <p className="error-message">{errors.author}</p>}
         </div>
         <div>
           <span>url</span>
-          <input name='info' value={info} onChange={(e) => setInfo(e.target.value)} />
+          <input {...info} />
         </div>
         <button type="submit">create</button>
+        <button type='button' onClick={() => handleReset()}>clear</button>
       </form>
     </main>
   )
