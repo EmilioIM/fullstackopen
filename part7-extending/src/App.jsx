@@ -9,14 +9,14 @@ import Togglable from './components/Togglable'
 import { useDispatch, useSelector } from 'react-redux'
 import { triggerNotification } from './features/notificationSlice'
 import { setBlogs } from './features/blogSlice'
+import { setUser } from './features/userSlice'
 
 const App = () => {
-  // const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [user, setUser] = useState(null)
   const dispatch = useDispatch()
   const blogs = useSelector((state) => state.blogs)
+  const user = useSelector((state) => state.user)
 
   const blogFormRef = useRef()
 
@@ -28,10 +28,10 @@ const App = () => {
     const loggedUserJSON = window.localStorage.getItem('loggedUser')
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
-      setUser(user)
+      dispatch(setUser(user))
       blogService.setToken(user.token)
     }
-  }, [])
+  }, [dispatch])
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -45,7 +45,7 @@ const App = () => {
       console.log({ user })
       window.localStorage.setItem('loggedUser', JSON.stringify(user))
       blogService.setToken(user.token)
-      setUser(user)
+      dispatch(setUser(user))
       setUsername('')
       setPassword('')
     } catch (exception) {
@@ -54,15 +54,14 @@ const App = () => {
   }
 
   const handleLogout = () => {
-    setUser(null)
+    dispatch(setUser(null))
     blogService.setToken(user.token)
     window.localStorage.removeItem('loggedUser')
   }
 
   const handleAddBlog = async (blog) => {
     blog.author = user.name
-    console.log('Adding new blog', blog)
-    // Lógica para añadir un nuevo blog
+    // console.log('Adding new blog', blog)
     try {
       blogFormRef.current.toggleVisibility()
       const createdBlog = await blogService.create(blog)
