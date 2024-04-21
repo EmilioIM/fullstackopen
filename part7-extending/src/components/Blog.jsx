@@ -25,7 +25,7 @@ const Blog = ({ blog, user, updateBlog, deleteBlog }) => {
     }
   }
 
-  console.log('User Name:', user.name, 'Blog:', blog)
+  // console.log('User Name:', user.name, 'Blog:', blog)
 
   return (
     <ul style={blogStyle} className="blog">
