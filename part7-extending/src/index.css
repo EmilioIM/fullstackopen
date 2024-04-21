@@ -12,8 +12,8 @@ code {
     monospace;
 }
 
-.error {
-  color: red;
+.notification {
+  color: black;
   background: lightgrey;
   font-size: 18px;
   border-style: solid;
@@ -22,12 +22,10 @@ code {
   margin-bottom: 10px;
 }
 
+.error {
+  color: red;
+}
+
 .success {
   color: green;
-  background: lightgrey;
-  font-size: 18px;
-  border-style: solid;
-  border-radius: 4px;
-  padding: 10px;
-  margin-bottom: 10px;
 }

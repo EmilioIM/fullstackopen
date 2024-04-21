@@ -17,9 +17,11 @@ describe('Blog component tests', () => {
       author: 'author test',
     }
 
-    render(<Blog blog={blog}/>)
+    render(<Blog blog={blog} />)
 
-    const element = screen.getByText('Component testing is done with react-testing-library')
+    const element = screen.getByText(
+      'Component testing is done with react-testing-library'
+    )
     const element2 = screen.getByText('author test')
     expect(element).toBeDefined()
     expect(element2).toBeDefined()
@@ -30,10 +32,10 @@ describe('Blog component tests', () => {
       title: 'Component testing is done with react-testing-library',
       author: 'author test',
       url: 'www.test.com',
-      likes: 33
+      likes: 33,
     }
 
-    render(<Blog blog={blog}/>)
+    render(<Blog blog={blog} />)
 
     const user = userEvent.setup()
     const button = screen.getByText('view')
@@ -72,7 +74,7 @@ describe('Blog component tests', () => {
     // Esta parte depende de cómo se actualiza la UI en respuesta a los clics
     // Si la UI no se actualiza directamente (espera respuesta de API), esto podría no reflejarse aquí
     expect(mockUpdateBlog).toHaveBeenCalledTimes(2)
-  // Además, si tu componente actualiza visualmente el conteo de likes en la UI y puedes mockearlo apropiadamente,
-  // puedes intentar verificar el nuevo valor de likes mostrado
+    // Además, si tu componente actualiza visualmente el conteo de likes en la UI y puedes mockearlo apropiadamente,
+    // puedes intentar verificar el nuevo valor de likes mostrado
   })
 })

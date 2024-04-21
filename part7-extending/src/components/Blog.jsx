@@ -13,7 +13,7 @@ const Blog = ({ blog, user, updateBlog, deleteBlog }) => {
   const handleLike = () => {
     const updatedBlog = {
       ...blog,
-      likes: blog.likes + 1
+      likes: blog.likes + 1,
     }
     blogService.update(blog.id, updatedBlog)
     updateBlog(updatedBlog)
@@ -28,7 +28,7 @@ const Blog = ({ blog, user, updateBlog, deleteBlog }) => {
   console.log('User Name:', user.name, 'Blog:', blog)
 
   return (
-    <ul style={blogStyle} className='blog'>
+    <ul style={blogStyle} className="blog">
       {blog.title}
       <Togglable buttonLabel={'view'}>
         <div data-testid="blog-url">{blog.url}</div>
@@ -37,9 +37,11 @@ const Blog = ({ blog, user, updateBlog, deleteBlog }) => {
           <button onClick={handleLike}>like</button>
         </div>
         <div data-testid="blog-author">{blog.author}</div>
-        <br/>
-        {user && user.name === blog.author && <button onClick={handleRemove}>remove</button>}
-        <br/>
+        <br />
+        {user && user.name === blog.author && (
+          <button onClick={handleRemove}>remove</button>
+        )}
+        <br />
       </Togglable>
     </ul>
   )

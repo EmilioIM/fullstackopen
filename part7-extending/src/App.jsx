@@ -6,6 +6,8 @@ import loginService from './services/login'
 import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
 import Togglable from './components/Togglable'
+import { useDispatch, useSelector } from 'react-redux'
+import { triggerNotification } from './features/notificationSlice'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -14,13 +16,12 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
+  const dispatch = useDispatch()
 
   const blogFormRef = useRef()
 
   useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs(blogs)
-    )
+    blogService.getAll().then((blogs) => setBlogs(blogs))
   }, [])
 
   useEffect(() => {
@@ -37,22 +38,18 @@ const App = () => {
 
     try {
       const user = await loginService.login({
-        username, password,
+        username,
+        password,
       })
       console.log({ username, password })
       console.log({ user })
-      window.localStorage.setItem(
-        'loggedUser', JSON.stringify(user)
-      )
+      window.localStorage.setItem('loggedUser', JSON.stringify(user))
       blogService.setToken(user.token)
       setUser(user)
       setUsername('')
       setPassword('')
     } catch (exception) {
-      setErrorMessage(`Error: ${exception.message}`)
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
+      dispatch(triggerNotification(`Error: ${exception.message}`, 'error'))
     }
   }
 
@@ -70,69 +67,66 @@ const App = () => {
       blogFormRef.current.toggleVisibility()
       const createdBlog = await blogService.create(blog)
       setBlogs(blogs.concat(createdBlog))
-      setMessage(`Nuevo blog '${createdBlog.title}' de ${createdBlog.author} añadido con éxito`)
-      setTimeout(() => {
-        setMessage(null)
-      }, 5000)
+      dispatch(triggerNotification(`Nuevo blog '${createdBlog.title}' de ${createdBlog.author} añadido con éxito`, 'success'))
     } catch (exception) {
-      setErrorMessage(`Error al añadir blog: ${exception.message}`)
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
+      dispatch(triggerNotification(`Error al añadir blog: ${exception.message}`, 'error'))
     }
   }
 
   const updateBlog = (updatedBlog) => {
-    setBlogs(blogs
-      .map(blog =>
-        blog.id === updatedBlog.id ? updatedBlog : blog)
+    setBlogs(
+      blogs.map((blog) => (blog.id === updatedBlog.id ? updatedBlog : blog))
     )
   }
 
   const deleteBlog = (id) => {
     try {
       blogService.remove(id)
-      setBlogs(blogs.filter(blog => blog.id !== id))
-      setMessage('Blog eliminado con éxito')
-      setTimeout(() => {
-        setMessage(null)
-      }, 5000)
+      setBlogs(blogs.filter((blog) => blog.id !== id))
+      dispatch(triggerNotification('Blog eliminado con éxito', 'success'))
     } catch (error) {
-      setErrorMessage(`Error al eliminar el blog: ${error.message}`)
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
+      dispatch(triggerNotification(`Error al eliminar blog: ${error.message}, 'error'`))
     }
   }
 
   return (
     <>
-      <Notification message={errorMessage} type={'error'} />
-      <Notification message={message} type={'success'} />
+      <Notification />
 
-      {user === null ? (
-        <Togglable buttonLabel="login">
-          <LoginForm
-            username={username}
-            password={password}
-            handleUsernameChange={({ target }) => setUsername(target.value)}
-            handlePasswordChange={({ target }) => setPassword(target.value)}
-            handleSubmit={handleLogin} />
-        </Togglable>
-      ) : (
-        <div>
-          <span>{`${user.name} logged in `}</span>
-          <button onClick={handleLogout}>logout</button>
-
-          <h3>Blogs</h3>
-          <Togglable buttonLabel="new blog" ref={blogFormRef}>
-            <BlogForm createBlog={handleAddBlog} />
+      {user === null
+        ? (
+          <Togglable buttonLabel="login">
+            <LoginForm
+              username={username}
+              password={password}
+              handleUsernameChange={({ target }) => setUsername(target.value)}
+              handlePasswordChange={({ target }) => setPassword(target.value)}
+              handleSubmit={handleLogin}
+            />
           </Togglable>
-          {blogs.sort((a, b) => b.likes - a.likes).map(blog =>
-            <Blog key={blog.id} blog={blog} user={user} updateBlog={updateBlog} deleteBlog={deleteBlog}/>
-          )}
-        </div>
-      )}
+        )
+        : (
+          <div>
+            <span>{`${user.name} logged in `}</span>
+            <button onClick={handleLogout}>logout</button>
+
+            <h3>Blogs</h3>
+            <Togglable buttonLabel="new blog" ref={blogFormRef}>
+              <BlogForm createBlog={handleAddBlog} />
+            </Togglable>
+            {blogs
+              .sort((a, b) => b.likes - a.likes)
+              .map((blog) => (
+                <Blog
+                  key={blog.id}
+                  blog={blog}
+                  user={user}
+                  updateBlog={updateBlog}
+                  deleteBlog={deleteBlog}
+                />
+              ))}
+          </div>
+        )}
     </>
   )
 }
