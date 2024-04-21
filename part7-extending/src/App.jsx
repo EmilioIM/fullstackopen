@@ -1,114 +1,139 @@
-import { useState } from 'react'
-
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
-
-import AnecdoteList from './components/AnecdoteList'
-import Anecdote from './components/Anecdote'
-import About from './components/About'
-import CreateForm from './components/CreateForm'
-
-const padding = {
-  paddingRight: 15,
-}
-
-const Footer = () => (
-  <footer>
-    Anecdote app for <a href="https://fullstackopen.com/">Full Stack Open</a>.
-    See{' '}
-    <a href="https://github.com/fullstack-hy2020/routed-anecdotes/blob/master/src/App.js">
-      https://github.com/fullstack-hy2020/routed-anecdotes/blob/master/src/App.js
-    </a>{' '}
-    for the source code.
-  </footer>
-)
+import { useState, useEffect, useRef } from 'react'
+import Blog from './components/Blog'
+import Notification from './components/Notification'
+import blogService from './services/blogs'
+import loginService from './services/login'
+import LoginForm from './components/LoginForm'
+import BlogForm from './components/BlogForm'
+import Togglable from './components/Togglable'
 
 const App = () => {
-  const [anecdotes, setAnecdotes] = useState([
-    {
-      content: 'If it hurts, do it more often',
-      author: 'Jez Humble',
-      info: 'https://martinfowler.com/bliki/FrequencyReducesDifficulty.html',
-      votes: 0,
-      id: 1,
-    },
-    {
-      content: 'Premature optimization is the root of all evil',
-      author: 'Donald Knuth',
-      info: 'http://wiki.c2.com/?PrematureOptimization',
-      votes: 0,
-      id: 2,
-    },
-  ])
+  const [blogs, setBlogs] = useState([])
+  const [message, setMessage] = useState(null)
+  const [errorMessage, setErrorMessage] = useState(null)
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+  const [user, setUser] = useState(null)
 
-  const [notification, setNotification] = useState('')
+  const blogFormRef = useRef()
 
-  const setNotificationMessage = (message) => {
-    setNotification(message)
-    setTimeout(() => {
-      setNotification('')
-    }, 5000) // restablece la notificación después de 5 segundos
+  useEffect(() => {
+    blogService.getAll().then(blogs =>
+      setBlogs(blogs)
+    )
+  }, [])
+
+  useEffect(() => {
+    const loggedUserJSON = window.localStorage.getItem('loggedUser')
+    if (loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON)
+      setUser(user)
+      blogService.setToken(user.token)
+    }
+  }, [])
+
+  const handleLogin = async (event) => {
+    event.preventDefault()
+
+    try {
+      const user = await loginService.login({
+        username, password,
+      })
+      console.log({ username, password })
+      console.log({ user })
+      window.localStorage.setItem(
+        'loggedUser', JSON.stringify(user)
+      )
+      blogService.setToken(user.token)
+      setUser(user)
+      setUsername('')
+      setPassword('')
+    } catch (exception) {
+      setErrorMessage(`Error: ${exception.message}`)
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
+    }
   }
 
-  const addNew = (anecdote) => {
-    anecdote.id = Math.round(Math.random() * 10000)
-    setAnecdotes(anecdotes.concat(anecdote))
+  const handleLogout = () => {
+    setUser(null)
+    blogService.setToken(user.token)
+    window.localStorage.removeItem('loggedUser')
   }
 
-  // const anecdoteById = (id) =>
-  //   anecdotes.find(a => a.id === id)
+  const handleAddBlog = async (blog) => {
+    blog.author = user.name
+    console.log('Adding new blog', blog)
+    // Lógica para añadir un nuevo blog
+    try {
+      blogFormRef.current.toggleVisibility()
+      const createdBlog = await blogService.create(blog)
+      setBlogs(blogs.concat(createdBlog))
+      setMessage(`Nuevo blog '${createdBlog.title}' de ${createdBlog.author} añadido con éxito`)
+      setTimeout(() => {
+        setMessage(null)
+      }, 5000)
+    } catch (exception) {
+      setErrorMessage(`Error al añadir blog: ${exception.message}`)
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
+    }
+  }
 
-  // const vote = (id) => {
-  //   const anecdote = anecdoteById(id)
-  //   const voted = {
-  //     ...anecdote,
-  //     votes: anecdote.votes + 1
-  //   }
+  const updateBlog = (updatedBlog) => {
+    setBlogs(blogs
+      .map(blog =>
+        blog.id === updatedBlog.id ? updatedBlog : blog)
+    )
+  }
 
-  //   setAnecdotes(anecdotes.map(a => a.id === id ? voted : a))
-  // }
+  const deleteBlog = (id) => {
+    try {
+      blogService.remove(id)
+      setBlogs(blogs.filter(blog => blog.id !== id))
+      setMessage('Blog eliminado con éxito')
+      setTimeout(() => {
+        setMessage(null)
+      }, 5000)
+    } catch (error) {
+      setErrorMessage(`Error al eliminar el blog: ${error.message}`)
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
+    }
+  }
 
   return (
-    <Router>
-      <div className="site-content">
-        <header>
-          <h1>Software anecdotes</h1>
-          <Link style={padding} to="/anecdotes">
-            anecdotes
-          </Link>
-          <Link style={padding} to="/create">
-            create new
-          </Link>
-          <Link style={padding} to="/about">
-            about
-          </Link>
-          {notification && <p className="notification">{notification}</p>}
-        </header>
+    <>
+      <Notification message={errorMessage} type={'error'} />
+      <Notification message={message} type={'success'} />
 
-        <Routes>
-          <Route path="/" element={<AnecdoteList anecdotes={anecdotes} />} />
-          <Route
-            path="/anecdotes"
-            element={<AnecdoteList anecdotes={anecdotes} />}
-          />
-          <Route
-            path="/anecdotes/:id"
-            element={<Anecdote anecdotes={anecdotes} />}
-          />
-          <Route
-            path="/create"
-            element={
-              <CreateForm
-                addNew={addNew}
-                setNotification={setNotificationMessage}
-              />
-            }
-          />
-          <Route path="/about" element={<About />} />
-        </Routes>
-      </div>
+      {user === null ? (
+        <Togglable buttonLabel="login">
+          <LoginForm
+            username={username}
+            password={password}
+            handleUsernameChange={({ target }) => setUsername(target.value)}
+            handlePasswordChange={({ target }) => setPassword(target.value)}
+            handleSubmit={handleLogin} />
+        </Togglable>
+      ) : (
+        <div>
+          <span>{`${user.name} logged in `}</span>
+          <button onClick={handleLogout}>logout</button>
 
-      <Footer />
-    </Router>
+          <h3>Blogs</h3>
+          <Togglable buttonLabel="new blog" ref={blogFormRef}>
+            <BlogForm createBlog={handleAddBlog} />
+          </Togglable>
+          {blogs.sort((a, b) => b.likes - a.likes).map(blog =>
+            <Blog key={blog.id} blog={blog} user={user} updateBlog={updateBlog} deleteBlog={deleteBlog}/>
+          )}
+        </div>
+      )}
+    </>
   )
 }
 
