@@ -1,13 +1,31 @@
+import { useParams } from 'react-router-dom'
 import Togglable from './Togglable'
 import blogService from '../services/blogs'
+import { useDispatch, useSelector } from 'react-redux'
+import { setBlogs } from '../features/blogSlice'
+import { triggerNotification } from '../features/notificationSlice'
 
-const Blog = ({ blog, user, updateBlog, deleteBlog }) => {
-  const blogStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    border: 'solid',
-    borderWidth: 1,
-    marginBottom: 5,
+
+const Blog = ({ user }) => {
+
+  const { id } = useParams()
+  const blogs = useSelector((state) => state.blogs)
+  const blog = useSelector(state => state.blogs.find(blog => blog.id === id))
+  const dispatch = useDispatch()
+
+
+  const updateBlog = (updatedBlog) => {
+    dispatch(setBlogs(blogs.map((blog) => (blog.id === updatedBlog.id ? updatedBlog : blog))))
+  }
+
+  const deleteBlog = (id) => {
+    try {
+      blogService.remove(id)
+      dispatch(setBlogs(blogs.filter((blog) => blog.id !== id)))
+      dispatch(triggerNotification('Blog eliminado con éxito', 'success'))
+    } catch (error) {
+      dispatch(triggerNotification(`Error al eliminar blog: ${error.message}, 'error'`))
+    }
   }
 
   const handleLike = () => {
@@ -25,24 +43,21 @@ const Blog = ({ blog, user, updateBlog, deleteBlog }) => {
     }
   }
 
-  // console.log('User Name:', user.name, 'Blog:', blog)
 
   return (
-    <ul style={blogStyle} className="blog">
-      {blog.title}
-      <Togglable buttonLabel={'view'}>
-        <div data-testid="blog-url">{blog.url}</div>
-        <div data-testid="blog-likes">
-          {blog.likes}
-          <button onClick={handleLike}>like</button>
-        </div>
-        <div data-testid="blog-author">{blog.author}</div>
-        <br />
-        {user && user.name === blog.author && (
-          <button onClick={handleRemove}>remove</button>
-        )}
-        <br />
-      </Togglable>
+    <ul className="blog">
+      <h1>{blog.title}</h1>
+      <div data-testid="blog-url">{blog.url}</div>
+      <div data-testid="blog-likes">
+        {blog.likes} likes
+        <button onClick={handleLike}>like</button>
+      </div>
+      <div data-testid="blog-author">
+        added by {blog.author}
+      </div>
+      {user && user.name === blog.author && (
+        <button onClick={handleRemove}>remove</button>
+      )}
     </ul>
   )
 }

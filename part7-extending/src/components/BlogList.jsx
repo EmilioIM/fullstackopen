@@ -6,6 +6,12 @@ import { useDispatch, useSelector } from 'react-redux'
 import blogService from '../services/blogs'
 import { setBlogs } from '../features/blogSlice'
 import { triggerNotification } from '../features/notificationSlice'
+import {
+  Routes,
+  Route,
+  Link
+} from 'react-router-dom'
+
 
 const BlogList = ({ user }) => {
 
@@ -31,19 +37,7 @@ const BlogList = ({ user }) => {
     }
   }
 
-  const updateBlog = (updatedBlog) => {
-    dispatch(setBlogs(blogs.map((blog) => (blog.id === updatedBlog.id ? updatedBlog : blog))))
-  }
 
-  const deleteBlog = (id) => {
-    try {
-      blogService.remove(id)
-      dispatch(setBlogs(blogs.filter((blog) => blog.id !== id)))
-      dispatch(triggerNotification('Blog eliminado con éxito', 'success'))
-    } catch (error) {
-      dispatch(triggerNotification(`Error al eliminar blog: ${error.message}, 'error'`))
-    }
-  }
 
   return (
     <div>
@@ -54,13 +48,10 @@ const BlogList = ({ user }) => {
       {[...blogs]
         .sort((a, b) => b.likes - a.likes)
         .map((blog) => (
-          <Blog
-            key={blog.id}
-            blog={blog}
-            user={user}
-            updateBlog={updateBlog}
-            deleteBlog={deleteBlog}
-          />
+          <div key={blog.id}>
+            <Link to={`/blogs/${blog.id}`}>{blog.title}, {blog.author}</Link>
+          </div>
+
         ))}
     </div>
   )

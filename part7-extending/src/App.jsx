@@ -16,7 +16,7 @@ import {
   Route,
   Link
 } from 'react-router-dom'
-
+import Blog from './components/Blog'
 
 const App = () => {
   const [username, setLoginUsername] = useState('')
@@ -86,10 +86,11 @@ const App = () => {
             </header>
 
             <Routes>
-              <Route path="/" element={<BlogList user={user}/>} />
+              <Route path="/blogs/:id" element={<Blog user={user}/>} />
               <Route path="/blogs" element={<BlogList user={user}/>} />
-              <Route path="/users" element={<UserList />} />
               <Route path="/users/:id" element={<User/>} />
+              <Route path="/users" element={<UserList />} />
+              <Route path="/" element={<BlogList user={user}/>} />
             </Routes>
           </Router>
         )}
