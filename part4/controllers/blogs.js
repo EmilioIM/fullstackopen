@@ -16,6 +16,20 @@ blogsRouter.get('/:id', async (request, response, next) => {
   }
 })
 
+blogsRouter.post('/:id/comments', async (request, response, next) => {
+  const comment = request.body.comment
+  const blog = await Blog.findById(request.params.id)
+
+  if (!blog) {
+    return response.status(404).json({ error: 'Blog not found' })
+  }
+
+  blog.comments.push(comment)
+  const updatedBlog = await blog.save()
+
+  response.status(201).json(updatedBlog)
+})
+
 blogsRouter.post('/', middleware.userExtractor, async (request, response, next) => {
   const body = request.body
   const user = request.user
