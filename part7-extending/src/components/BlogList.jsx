@@ -40,20 +40,22 @@ const BlogList = ({ user }) => {
 
 
   return (
-    <div>
-      <h3>Blogs</h3>
-      <Togglable buttonLabel="new blog" ref={blogFormRef}>
+    <>
+      <h3 className='mb-4'>Blogs</h3>
+      <Togglable buttonLabel="new blog" ref={blogFormRef} >
         <BlogForm createBlog={handleAddBlog} />
       </Togglable>
-      {[...blogs]
-        .sort((a, b) => b.likes - a.likes)
-        .map((blog) => (
-          <div key={blog.id}>
-            <Link to={`/blogs/${blog.id}`}>{blog.title}, {blog.author}</Link>
-          </div>
+      <div className='list-group mt-3'>
+        {[...blogs]
+          .sort((a, b) => b.likes - a.likes)
+          .map((blog) => (
+            <button key={blog.id} className='list-group-item list-group-item-action'>
+              <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
+            </button>
 
-        ))}
-    </div>
+          ))}
+      </div>
+    </>
   )
 }
 

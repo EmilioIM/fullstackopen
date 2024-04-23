@@ -60,7 +60,7 @@ const App = () => {
   }
 
   return (
-    <>
+    <div className='container'>
       <Notification />
 
       {user === null
@@ -77,12 +77,14 @@ const App = () => {
         )
         : (
           <Router>
-            <header>
-              <Link to="/blogs">blogs</Link>
-              <Link to="/users">users</Link>
+            <header className="navbar navbar-expand-lg navbar-light bg-light mb-5">
+              <div className="container-fluid">
+                <Link to="/blogs" className="navbar-brand">blogs</Link>
+                <Link to="/users" className="navbar-brand">users</Link>
 
-              <span>{`${user.name} logged in `}</span>
-              <button onClick={handleLogout}>logout</button>
+                <span className="navbar-text">{`${user.name} logged in `}</span>
+                <button className="btn btn-outline-danger" onClick={handleLogout}>logout</button>
+              </div>
             </header>
 
             <Routes>
@@ -94,7 +96,7 @@ const App = () => {
             </Routes>
           </Router>
         )}
-    </>
+    </div>
   )
 }
 

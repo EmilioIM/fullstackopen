@@ -8,34 +8,36 @@ const LoginForm = ({
   handlePasswordChange,
 }) => {
   return (
-    <div>
+    <>
       <h2>Login</h2>
       <form onSubmit={handleSubmit}>
-        <div>
-          username
+        <div className='mb-1'>
+          <label className="form-label">username</label>
           <input
             id="username"
             type="text"
             value={username}
             name="Username"
             onChange={handleUsernameChange}
+            className='form-control'
           />
         </div>
-        <div>
-          password
+        <div className='mb-4'>
+          <label className="form-label">password</label>
           <input
             id="password"
             type="password"
             value={password}
             name="Password"
             onChange={handlePasswordChange}
+            className='form-control'
           />
         </div>
-        <button id="login-button" type="submit">
+        <button id="login-button" type="submit" className='btn btn-primary mb-3'>
           login
         </button>
       </form>
-    </div>
+    </>
   )
 }
 
