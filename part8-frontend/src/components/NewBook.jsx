@@ -15,7 +15,8 @@ const NewBook = (props) => {
   const [createBook] = useMutation(CREATE_BOOK, {
     refetchQueries: [{ query: BOOKS }, { query: AUTHORS_BORN_COUNT }],
     onError: (error) => {
-      console.log(error);
+      const messages = error.graphQLErrors.map((e) => e.message).join("\n");
+      props.setError(messages);
     },
   });
 
@@ -34,9 +35,21 @@ const NewBook = (props) => {
     }));
   }, []);
 
+  const isValidForm = (formData) => {
+    const requiredFields = ["title", "author", "published", "genres"];
+    return requiredFields.every(
+      (field) => formData[field] && formData[field].length > 0
+    );
+  };
+
   const handleSubmit = useCallback(
     (event) => {
       event.preventDefault();
+
+      if (!isValidForm(formData)) {
+        alert("Todos los campos son obligatorios");
+        return;
+      }
 
       createBook({
         variables: {
@@ -103,6 +116,7 @@ const NewBook = (props) => {
 // Validación de PropTypes
 NewBook.propTypes = {
   show: PropTypes.bool.isRequired,
+  setError: PropTypes.func.isRequired,
 };
 
 export default NewBook;
