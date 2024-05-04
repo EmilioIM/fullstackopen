@@ -1,5 +1,7 @@
 import { useState, useCallback } from "react";
 import PropTypes from "prop-types"; // Importar PropTypes
+import { useMutation } from "@apollo/client";
+import { CREATE_BOOK, BOOKS, AUTHORS_BORN_COUNT } from "../queries";
 
 const NewBook = (props) => {
   const [formData, setFormData] = useState({
@@ -8,6 +10,13 @@ const NewBook = (props) => {
     published: "",
     genre: "",
     genres: [],
+  });
+
+  const [createBook] = useMutation(CREATE_BOOK, {
+    refetchQueries: [{ query: BOOKS }, { query: AUTHORS_BORN_COUNT }],
+    onError: (error) => {
+      console.log(error);
+    },
   });
 
   const handleChange = useCallback(({ target }) => {
@@ -28,7 +37,15 @@ const NewBook = (props) => {
   const handleSubmit = useCallback(
     (event) => {
       event.preventDefault();
-      console.log("Adding book:", formData);
+
+      createBook({
+        variables: {
+          title: formData.title,
+          author: formData.author,
+          published: Number(formData.published),
+          genres: formData.genres,
+        },
+      });
 
       // Clear form fields
       setFormData({
@@ -39,7 +56,7 @@ const NewBook = (props) => {
         genres: [],
       });
     },
-    [formData]
+    [createBook, formData]
   );
 
   if (!props.show) {
@@ -85,7 +102,7 @@ const NewBook = (props) => {
 
 // Validación de PropTypes
 NewBook.propTypes = {
-  show: PropTypes.bool.isRequired, // Se espera que 'show' sea un booleano y es requerido
+  show: PropTypes.bool.isRequired,
 };
 
 export default NewBook;

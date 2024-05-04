@@ -1,15 +1,6 @@
-import { gql, useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import PropTypes from "prop-types";
-
-const BOOKS = gql`
-  query AllAuthors {
-    allBooks {
-      title
-      author
-      published
-    }
-  }
-`;
+import { BOOKS } from "../queries";
 
 const Books = (props) => {
   const result = useQuery(BOOKS);
@@ -52,7 +43,7 @@ const Books = (props) => {
 
 // Validación de PropTypes
 Books.propTypes = {
-  show: PropTypes.bool.isRequired, // Se espera que 'show' sea un booleano y es requerido
+  show: PropTypes.bool.isRequired,
 };
 
 export default Books;
