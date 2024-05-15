@@ -1,9 +1,14 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const schema = new mongoose.Schema({
   name: { type: String, required: true, minlength: 3 },
   born: Number,
-  // bookCount is calculated
+  books: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Book",
+    },
+  ],
 });
 
-module.exports = mongoose.model("Author", schema);
+export default mongoose.model("Author", schema);

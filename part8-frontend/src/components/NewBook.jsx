@@ -2,6 +2,7 @@ import { useState, useCallback } from "react";
 import PropTypes from "prop-types"; // Importar PropTypes
 import { useMutation, useApolloClient } from "@apollo/client";
 import { CREATE_BOOK, BOOKS, AUTHORS_BORN_COUNT } from "../queries";
+import { updateCache } from "../App";
 
 const NewBook = (props) => {
   const [formData, setFormData] = useState({
@@ -26,24 +27,23 @@ const NewBook = (props) => {
       const messages = error.graphQLErrors.map((e) => e.message).join("\n");
       props.setError(messages);
     },
-    update: (cache, response) => {
-      const newBook = response.data.addBook;
-      const existingBooks = cache.readQuery({ query: BOOKS });
-
-      cache.writeQuery({
-        query: BOOKS,
-        data: {
-          allBooks: [...existingBooks.allBooks, newBook],
-        },
-      });
-    },
     // update: (cache, response) => {
-    //   cache.updateQuery({ query: BOOKS }, ({ allBooks }) => {
-    //     return {
-    //       allBooks: allBooks.concat(response.data.allBooks),
-    //     };
+    //   const newBook = response.data.addBook;
+    //   const existingBooks = cache.readQuery({ query: BOOKS });
+
+    //   cache.writeQuery({
+    //     query: BOOKS,
+    //     data: {
+    //       allBooks: [...existingBooks.allBooks, newBook],
+    //     },
     //   });
     // },
+    update: (cache = client.cache, response) => {
+      console.log({ cache, response });
+      if (response.data) {
+        updateCache(cache, BOOKS, { genre: null }, response.data.addBook);
+      }
+    },
   });
 
   const handleChange = useCallback(({ target }) => {

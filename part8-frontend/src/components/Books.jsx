@@ -15,13 +15,13 @@ const Books = (props) => {
   if (!props.show) {
     return null;
   }
-  
+
   if (result.loading) {
     return <div>loading...</div>;
   }
 
   const books = result.data.allBooks;
-  
+
   // Obtener todos los géneros únicos
   const genres = [...new Set(books.flatMap((book) => book.genres))];
 
@@ -31,12 +31,13 @@ const Books = (props) => {
 
       <button onClick={() => setSelectedGenre(null)}>all genres</button>
       {genres.map((genre) => (
-        <button 
-          key={genre} 
+        <button
+          key={genre}
           onClick={() => setSelectedGenre(genre)}
           style={{
             backgroundColor: genre === selectedGenre ? "lightblue" : "white",
-          }}>
+          }}
+        >
           {genre}
         </button>
       ))}
@@ -57,7 +58,6 @@ const Books = (props) => {
           ))}
         </tbody>
       </table>
-
     </div>
   );
 };
