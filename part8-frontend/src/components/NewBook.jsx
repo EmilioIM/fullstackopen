@@ -1,6 +1,6 @@
 import { useState, useCallback } from "react";
 import PropTypes from "prop-types"; // Importar PropTypes
-import { useMutation } from "@apollo/client";
+import { useMutation, useApolloClient } from "@apollo/client";
 import { CREATE_BOOK, BOOKS, AUTHORS_BORN_COUNT } from "../queries";
 
 const NewBook = (props) => {
@@ -12,12 +12,38 @@ const NewBook = (props) => {
     genres: [],
   });
 
+  const client = useApolloClient();
+
   const [createBook] = useMutation(CREATE_BOOK, {
-    refetchQueries: [{ query: BOOKS }, { query: AUTHORS_BORN_COUNT }],
+    // refetchQueries: [
+    //   {
+    //     query: BOOKS,
+    //     // variables: { genre: mutationResult.data.addBook.genres },
+    //   },
+    //   { query: AUTHORS_BORN_COUNT },
+    // ],
     onError: (error) => {
       const messages = error.graphQLErrors.map((e) => e.message).join("\n");
       props.setError(messages);
     },
+    update: (cache, response) => {
+      const newBook = response.data.addBook;
+      const existingBooks = cache.readQuery({ query: BOOKS });
+
+      cache.writeQuery({
+        query: BOOKS,
+        data: {
+          allBooks: [...existingBooks.allBooks, newBook],
+        },
+      });
+    },
+    // update: (cache, response) => {
+    //   cache.updateQuery({ query: BOOKS }, ({ allBooks }) => {
+    //     return {
+    //       allBooks: allBooks.concat(response.data.allBooks),
+    //     };
+    //   });
+    // },
   });
 
   const handleChange = useCallback(({ target }) => {
@@ -50,7 +76,6 @@ const NewBook = (props) => {
         alert("Todos los campos son obligatorios");
         return;
       }
-
       createBook({
         variables: {
           title: formData.title,
@@ -69,7 +94,7 @@ const NewBook = (props) => {
         genres: [],
       });
     },
-    [createBook, formData]
+    [createBook, formData, client]
   );
 
   if (!props.show) {

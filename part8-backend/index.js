@@ -80,7 +80,6 @@ const resolvers = {
     authorCount: async () => await Author.countDocuments(),
     allBooks: async (root, args) => {
       let filter = {};
-
       if (args.author) {
         const author = await Author.findOne({ name: args.author });
         filter.author = author ? author._id : null;
@@ -141,7 +140,7 @@ const resolvers = {
         }
       }
 
-      const book = new Book({ ...args, author: author._id });
+      const book = new Book({ ...args, author: author });
 
       try {
         await book.save();
@@ -154,7 +153,6 @@ const resolvers = {
           },
         });
       }
-
       return book;
     },
     editAuthor: async (root, args, context) => {
@@ -196,7 +194,9 @@ const resolvers = {
     createUser: async (root, args) => {
       const user = new User({ username: args.username });
 
-      return user.save().catch((error) => {
+      try {
+        return await user.save();
+      } catch (error) {
         throw new GraphQLError("Creating the user failed", {
           extensions: {
             code: "BAD_USER_INPUT",
@@ -204,7 +204,7 @@ const resolvers = {
             error,
           },
         });
-      });
+      }
     },
     login: async (root, args) => {
       const user = await User.findOne({ username: args.username });
