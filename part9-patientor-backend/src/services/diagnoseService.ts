@@ -1,17 +1,17 @@
-import diagnoseData from '../../data/diagnoses.ts';
-import Diagnose from '../types/diagnose.ts';
+import diagnoseData from "../../data/diagnoses.ts";
+import { Diagnosis } from "../types";
 
-const diagnoses: Diagnose[] = diagnoseData;
+const diagnoses: Diagnosis[] = diagnoseData;
 
-const getEntries = ():Diagnose[] => {
+const getEntries = (): Diagnosis[] => {
   return diagnoses;
-}
+};
 
 const addEntry = () => {
   return null;
-}
+};
 
 export default {
   getEntries,
-  addEntry
+  addEntry,
 };
